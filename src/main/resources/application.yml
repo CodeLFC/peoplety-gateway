@@ -1,0 +1,54 @@
+logging:
+  level:
+    root: INFO
+
+spring:
+  application:
+    name: app-peoplety-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    # 配置 路由网关
+    gateway:
+      # 设置与服务注册发现组件结合，这样可以采用服务名的路由策略
+      discovery:
+        locator:
+          enabled: true
+      # 配置路由规则
+      routes:
+        # 路由 ID，不同的 id 有不同的功能
+        - id: user-route
+          #  要使用注册中心的服务：lb://{注册的服务名}
+          uri: lb://app-peoplety-user
+          # 路由断言Factories
+          predicates:
+            - Path=/user/**
+          filters:
+            # 转发请求时去掉1级前缀
+            - StripPrefix=1
+
+        - id: record-route
+          uri: lb://app-peoplety-record
+          predicates:
+            - Path=/record/**
+          filters:
+            # 转发请求时去掉1级前缀
+            - StripPrefix=1
+server:
+  port: 8100
+  servlet:
+    context-path: "/"
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://gaozhi.online:8080/eureka/
+  instance:
+    instance-id: peoplety-gateway
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 1
+    lease-expiration-duration-in-seconds: 2
+http:
+  encoding:
+    charset: UTF-8
+    enabled: true
+    force: true
