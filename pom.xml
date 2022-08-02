@@ -25,7 +25,12 @@
             <artifactId>spring-base</artifactId>
             <version>1.0</version>
         </dependency>
-        <!--     在引入gateway相关依赖时，去除spring-boot-starter-web相关依赖 -->
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>

@@ -26,7 +26,14 @@ spring:
           filters:
             # 转发请求时去掉1级前缀
             - StripPrefix=1
-
+            #请求数限流
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@ipKeyResolver}'
+                #令牌桶每秒填充平均速率
+                redis-rate-limiter.replenishRate: 30
+                #令牌桶总容量
+                redis-rate-limiter.burstCapacity: 100
         - id: record-route
           uri: lb://app-peoplety-record
           predicates:
@@ -34,13 +41,17 @@ spring:
           filters:
             # 转发请求时去掉1级前缀
             - StripPrefix=1
+# 配置Redis，限流 127.0.0.1可以省略配置
+redis:
+  host: 127.0.0.1
+  port: 6379
 server:
   port: 8100
   servlet:
     context-path: "/"
   tomcat:
     # (),/:;<=>?@[\]{}  转发过程中出现的特殊字符
-    relaxed-query-chars: ['[',']','{','}' ]
+    relaxed-query-chars: [ '[',']','{','}' ]
 eureka:
   client:
     serviceUrl:
