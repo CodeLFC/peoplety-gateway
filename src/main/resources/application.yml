@@ -38,6 +38,9 @@ server:
   port: 8100
   servlet:
     context-path: "/"
+  tomcat:
+    # (),/:;<=>?@[\]{}  转发过程中出现的特殊字符
+    relaxed-query-chars: ['[',']','{','}' ]
 eureka:
   client:
     serviceUrl:
