@@ -48,7 +48,13 @@ spring:
           filters:
             # 转发请求时去掉1级前缀
             - StripPrefix=1
-
+        - id: msg-route
+            uri: lb://app-peoplety-im
+            predicates:
+              - Path=/im/**
+            filters:
+              # 转发请求时去掉1级前缀
+              - StripPrefix=1
 # 配置Redis，限流 127.0.0.1可以省略配置
 redis:
   host: 127.0.0.1
