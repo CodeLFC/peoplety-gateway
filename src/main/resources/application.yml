@@ -16,7 +16,7 @@ spring:
           enabled: true
       # 配置路由规则
       routes:
-        # 路由 ID，不同的 id 有不同的功能
+        #=============================================================用户微服务
         - id: user-route
           #  要使用注册中心的服务：lb://{注册的服务名}
           uri: lb://app-peoplety-user
@@ -34,6 +34,7 @@ spring:
                 redis-rate-limiter.replenishRate: 30
                 #令牌桶总容量
                 redis-rate-limiter.burstCapacity: 100
+        #=============================================================社区微服务
         - id: record-route
           uri: lb://app-peoplety-record
           predicates:
@@ -41,6 +42,7 @@ spring:
           filters:
             # 转发请求时去掉1级前缀
             - StripPrefix=1
+        #=============================================================系统日志微服务
         - id: log-route
           uri: lb://app-peoplety-log
           predicates:
@@ -48,6 +50,23 @@ spring:
           filters:
             # 转发请求时去掉1级前缀
             - StripPrefix=1
+        #=============================================================分布式ID微服务
+        - id: leaf-route
+            uri: lb://app-peoplety-leaf
+            predicates:
+              - Path=/leaf/**
+            filters:
+              # 转发请求时去掉1级前缀
+              - StripPrefix=1
+                #请求数限流
+                  - name: RequestRateLimiter
+                  args:
+                    key-resolver: '#{@ipKeyResolver}'
+                    #令牌桶每秒填充平均速率
+                    redis-rate-limiter.replenishRate: 30
+                    #令牌桶总容量
+                    redis-rate-limiter.burstCapacity: 100
+        #==========================================================即时通信微服务 - deprecated
         - id: msg-route
           uri: lb://app-peoplety-im
           predicates:
