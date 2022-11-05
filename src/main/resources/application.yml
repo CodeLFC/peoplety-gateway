@@ -52,20 +52,20 @@ spring:
             - StripPrefix=1
         #=============================================================分布式ID微服务
         - id: leaf-route
-            uri: lb://app-peoplety-leaf
-            predicates:
-              - Path=/leaf/**
-            filters:
-              # 转发请求时去掉1级前缀
-              - StripPrefix=1
-                #请求数限流
-                  - name: RequestRateLimiter
-                  args:
-                    key-resolver: '#{@ipKeyResolver}'
-                    #令牌桶每秒填充平均速率
-                    redis-rate-limiter.replenishRate: 30
-                    #令牌桶总容量
-                    redis-rate-limiter.burstCapacity: 100
+          uri: lb://app-peoplety-leaf
+          predicates:
+            - Path=/leaf/**
+          filters:
+            # 转发请求时去掉1级前缀
+            - StripPrefix=1
+              #请求数限流
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@ipKeyResolver}'
+                #令牌桶每秒填充平均速率
+                redis-rate-limiter.replenishRate: 30
+                #令牌桶总容量
+                redis-rate-limiter.burstCapacity: 100
         #==========================================================即时通信微服务 - deprecated
         - id: msg-route
           uri: lb://app-peoplety-im
