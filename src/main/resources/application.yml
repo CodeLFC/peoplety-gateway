@@ -88,7 +88,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://dgl.gaozhi.online:8080/eureka/
+      defaultZone: http://gaozhi.online:8080/eureka/
   instance:
     instance-id: peoplety-gateway
     prefer-ip-address: true
